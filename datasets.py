@@ -207,22 +207,3 @@ def load_seeds():
         labels_.append(int(indicator_))
         y[i] = map(float, y[i])
     return y, labels_
-            
-        
-        
-
-    
-
-
-
-        
-    
-                    
-                
-            
-    
-    
-
-    
-    
-    
