@@ -1,3 +1,4 @@
+from __future__ import division
 import sys
 sys.dont_write_bytecode = True
 import random
@@ -11,6 +12,9 @@ class ffclass(object):
         self.data = data
         self.tdata = zip(*self.data)
         self.labels = self.tdata[-1]
+        self.hist = dict([(e, 0) for e in set(self.labels)])
+        for a in self.data:
+            self.hist[a[-1]] += 1
         self.scorer = {}
         self.process()
 
@@ -36,16 +40,21 @@ class ffclass(object):
         counter = dict([(l, 0) for l in self.labels])
         for i in range(0, len(item)):
             result = self.scorer[i][sorted(self.scorer[i].keys(), key=lambda n: abs(n-item[i]))[0]]
-            counter[max(result, key=result.get)] += 1
+            for a in result:
+                counter[a] += result[a]
+            #counter[max(result, keyresult.get)] += 1
         
+        #* (self.hist[class_]/len(self.data))        
+        counter = dict([(class_, counter[class_] * (self.hist[class_]/len(self.data))) for class_ in counter])
         return max(counter, key=counter.get)
         
 class forest_fclass(object):
     def __init__(self, data):
         self.data = data
-        random.shuffle(data, random=numpy.random.rand)
-        self.labels_ = [a[-1] for a in data]
-        self.sets = self.get_chunks(self.data, len(self.data)/20)
+        random.shuffle(self.data)
+        self.labels_ = [a[-1] for a in self.data]
+        #self.sets = self.get_chunks(self.data, int(len(self.data)/len(set(self.labels_))))
+        self.sets = self.get_chunks(self.data, len(set(self.labels_)))
         self.classifiers = {}
         self.build_classifiers()
     
@@ -61,7 +70,7 @@ class forest_fclass(object):
                 distribution[a] += 1
             else:
                 distribution[a] = 1
-
+        
         print "Class Distribution: %s" % distribution
         print "To have an optimal performance, equal number of samples should be provided for each class.."
         print "processing.."
