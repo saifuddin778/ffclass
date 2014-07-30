@@ -20,6 +20,10 @@ To utilize just a single decision object:
 >>> ff.query([f1,f2, ... , fn])
 >>> "predicted class"
 ```
+#####Note:
+1. This classifier is designed and suited best for discrete features, but can be used for continuous ones as well.
+2. Optimum classification is achieved when enough/equally sufficient samples are provided for each class.
+
 #####Some Details:
 1. Shuffle the data.
 2. Distribute into chunks.
